@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreShoeRequest;
 use App\Http\Requests\UpdateShoeRequest;
 use App\Services\ShoeService;
-use Illuminate\Session\Store;
 
 class ShoeController extends Controller
 {
@@ -23,7 +22,12 @@ class ShoeController extends Controller
     }
         
     public function show(int $id){
+        $shoe = $this->shoeService->show($id);
 
+        return response()->json([
+            'message' => 'Zapatilla encontrada',
+            'data' => $shoe,
+        ], 200);
     }
 
     public function store(StoreShoeRequest $request){
@@ -36,11 +40,29 @@ class ShoeController extends Controller
 
     }
 
-    public function update(){
+    public function update(UpdateShoeRequest $request, int $id){
+        $shoe = $this->shoeService->update($id, $request->validated());
 
+        return response()->json([
+            'message' => 'Zapatilla actualizada',
+            'data' => $shoe,
+        ], 200);
     }
 
-    public function delete(){
+    public function delete(int $id){
+        $this->shoeService->soft_delete($id);
 
+        return response()->json([
+            'message' => 'Zapatilla eliminada',
+        ], 200);
     }
+
+    public function destroy(int $id){
+        $this->shoeService->destroy($id);
+
+        return response()->json([
+            'message' => 'Zapatilla eliminada permanentemente',
+        ], 200);
+    }
+
 }

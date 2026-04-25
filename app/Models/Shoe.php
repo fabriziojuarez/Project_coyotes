@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Shoe extends Model
 {
-    protected $table = 'shoe_information';
+    protected $table = 'shoes';
     protected $fillable = [
+        'sku',
         'shoe_detail_id',
         'size',
         'color',

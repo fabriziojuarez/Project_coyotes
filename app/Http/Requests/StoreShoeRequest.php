@@ -31,8 +31,8 @@ class StoreShoeRequest extends FormRequest
             'color' => 'required|string|max:255',
             'size' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'optional|nullable|string|max:255',
-            'promo_price' => 'optional|nullable|numeric|min:0|max:base_price',
+            'description' => 'sometimes|nullable|string|max:255',
+            'promo_price' => 'sometimes|nullable|numeric|min:0|max:base_price',
         ];
     }
 }
