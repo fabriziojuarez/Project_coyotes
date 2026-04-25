@@ -16,18 +16,15 @@ return new class extends Migration
             $table->foreignId('shoe_detail_id')
                 ->constrained('shoe_details')
                 ->onDelete('cascade');
-            $table->foreignId('shoe_color_id')
-                ->constrained('shoe_colors')
-                ->onDelete('cascade');
-            $table->foreignId('shoe_size_id')
-                ->constrained('shoe_sizes')
-                ->onDelete('cascade');
+            $table->string('color', 255);
+            $table->double('size', 5, 2);
             $table->integer('stock')->default(0);
             $table->boolean('is_discontinued')->default(false);
             $table->boolean('is_promotion')->default(false);
-            $table->decimal('price', 8, 2);
             $table->decimal('promo_price', 8, 2)->nullable();
             $table->timestamps();
+
+            $table->unique(['shoe_detail_id', 'color', 'size']);
         });
     }
 

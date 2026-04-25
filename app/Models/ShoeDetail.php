@@ -11,6 +11,7 @@ class ShoeDetail extends Model
         'category_id',
         'brand',
         'model',
+        'base_price',
         'description',
     ];
 

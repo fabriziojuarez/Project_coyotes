@@ -9,7 +9,7 @@ class ShoeCategory extends Model
     protected $table = 'shoe_categories';
     protected $fillable = ['name'];
 
-    public function shoes()
+    public function shoeDetails()
     {
         return $this->hasMany(ShoeDetail::class, 'category_id');
     }

@@ -18,8 +18,11 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('brand');
             $table->string('model');
+            $table->double('base_price', 10, 2);
             $table->text('description');
             $table->timestamps();
+
+            $table->unique(['category_id', 'brand', 'model']);
         });
     }
 
