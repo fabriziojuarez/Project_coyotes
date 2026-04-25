@@ -16,7 +16,7 @@ class ShoeController extends Controller
         $shoes = $this->shoeService->index();
 
         return response()->json([
-            'message' => 'Zapatillas listadas',
+            'message' => 'Zapatos listadas',
             'data' => $shoes,
         ], 200);
     }
@@ -25,7 +25,7 @@ class ShoeController extends Controller
         $shoe = $this->shoeService->show($id);
 
         return response()->json([
-            'message' => 'Zapatilla encontrada',
+            'message' => 'Zapato encontrado',
             'data' => $shoe,
         ], 200);
     }
@@ -34,7 +34,7 @@ class ShoeController extends Controller
         $shoe = $this->shoeService->store($request->validated());
 
         return response()->json([
-            'message' => 'Zapatilla creada',
+            'message' => 'Zapato creado',
             'data' => $shoe,
         ], 201);
 
@@ -44,7 +44,7 @@ class ShoeController extends Controller
         $shoe = $this->shoeService->update($id, $request->validated());
 
         return response()->json([
-            'message' => 'Zapatilla actualizada',
+            'message' => 'Zapato actualizado',
             'data' => $shoe,
         ], 200);
     }
@@ -53,7 +53,7 @@ class ShoeController extends Controller
         $this->shoeService->soft_delete($id);
 
         return response()->json([
-            'message' => 'Zapatilla eliminada',
+            'message' => 'Zapato eliminado',
         ], 200);
     }
 
@@ -61,7 +61,7 @@ class ShoeController extends Controller
         $this->shoeService->destroy($id);
 
         return response()->json([
-            'message' => 'Zapatilla eliminada permanentemente',
+            'message' => 'Zapato eliminado permanentemente',
         ], 200);
     }
 

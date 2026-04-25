@@ -12,9 +12,7 @@ class Shoe extends Model
         'shoe_detail_id',
         'size',
         'color',
-        'is_discontinued',
-        'is_promotion',
-        'promo_price',
+        'is_hidden',
         'stock',
     ];
 

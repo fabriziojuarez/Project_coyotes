@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('brand');
             $table->string('model');
             $table->double('base_price', 10, 2);
+            $table->boolean('is_discontinued')->default(false);
+            $table->boolean('is_promotion')->default(false);
+            $table->decimal('promo_price', 8, 2)->nullable();
+            $table->decimal('promo_descount', 5, 2)->nullable();
             $table->text('description');
             $table->timestamps();
 

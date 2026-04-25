@@ -7,11 +7,18 @@ use App\Models\ShoeDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
+use App\Services\ShoeDetailService;
+
 class ShoeService
 {
     public function index(): Collection
     {
-        $shoes = Shoe::select('*')->where('stock', '>', 0)->orWhere('is_discontinued', '=', 0)->get();
+        $shoes = Shoe::with('shoeDetail')
+            ->whereHas('shoeDetail', function($query){
+                $query->where('is_discontinued', false);
+            })
+            ->where('stock', '>', 0)
+            ->get(); 
         return $shoes;
     }
 
@@ -24,14 +31,8 @@ class ShoeService
     public function store(array $data): Shoe 
     {
         return DB::transaction(function() use ($data){
-            $shoe_detail = ShoeDetail::firstOrCreate([
-                'category_id' => $data['category'],
-                'brand' => $data['brand'],
-                'model' => $data['model'],
-            ],[
-                'description' => $data['description'] ?? null,
-                'base_price' => $data['base_price'],
-            ]);
+            $shoe_detail_service = new ShoeDetailService();
+            $shoe_detail = $shoe_detail_service->store($data);
 
             $shoe = Shoe::create([
                 'sku' => $data['sku'],
@@ -39,8 +40,6 @@ class ShoeService
                 'color' => $data['color'],
                 'size' => $data['size'],
                 'stock' => $data['stock'],
-                'promo_price' => $data['promo_price'] ?? null,
-                'is_promotion' => isset($data['promo_price']) ? true : false,
             ]);
 
             $shoe->refresh();
@@ -51,34 +50,23 @@ class ShoeService
     public function update(int $id, array $data): Shoe
     {
         $shoe = Shoe::findOrFail($id);
-        $shoe_detail = $shoe->shoeDetail;
 
-        DB::transaction(function() use ($shoe, $shoe_detail, $data){
-            $shoe_detail->update([
-                'category_id' => $data['category'],
-                'brand' => $data['brand'],
-                'model' => $data['model'],
-                'description' => $data['description'] ?? null,
-                'base_price' => $data['base_price'],
-            ]);
-
+        return DB::transaction(function() use ($shoe, $data){
             $shoe->update([
                 'color' => $data['color'],
                 'size' => $data['size'],
-                'stock' => $data['stock'],
-                'promo_price' => $data['promo_price'] ?? null,
-                'is_promotion' => isset($data['promo_price']) ? true : false,
+                'stock' => $data['stock'],         
             ]);
-        });
 
-        $shoe->refresh();
-        return $shoe;
+            $shoe->refresh();
+            return $shoe;
+        });
     }
 
     public function soft_delete(int $id): void
     {
         $shoe = Shoe::findOrFail($id);
-        $shoe->update(['is_discontinued' => true]);
+        $shoe->update(['is_hidden' => true]);
     }
 
     public function destroy(int $id): void

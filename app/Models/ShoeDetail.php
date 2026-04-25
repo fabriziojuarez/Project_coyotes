@@ -12,6 +12,10 @@ class ShoeDetail extends Model
         'brand',
         'model',
         'base_price',
+        'is_discontinued',
+        'is_promotion',
+        'promo_price',
+        'promo_descount',
         'description',
     ];
 
