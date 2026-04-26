@@ -23,12 +23,13 @@ class UpdateShoeDetailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => 'sometimes|exists:shoe_categories,id',
-            'brand' => 'sometimes|string|max:255',
-            'model' => 'sometimes|string|max:255',
-            'base_price' => 'sometimes|numeric|min:0',
-            'description' => 'sometimes|nullable|string|max:255',
+            'category' => 'required|exists:shoe_categories,id',
+            'brand' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'base_price' => 'required|numeric|min:0',
+            'description' => 'required|nullable|string|max:255',
             'promo_descount' => 'sometimes|nullable|integer|min:0|max:100',
+            'is_discontinued' => 'required|boolean',
         ];
     }
 }

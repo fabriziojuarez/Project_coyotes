@@ -18,6 +18,7 @@ class ShoeService
                 $query->where('is_discontinued', false);
             })
             ->where('stock', '>', 0)
+            ->where('is_hidden', false)
             ->get(); 
         return $shoes;
     }
@@ -34,12 +35,32 @@ class ShoeService
             $shoe_detail_service = new ShoeDetailService();
             $shoe_detail = $shoe_detail_service->store($data);
 
+            $duplicate_fields = Shoe::select('*')
+                ->where('shoe_detail_id', $shoe_detail->id)
+                ->where('size', $data['size'])
+                ->where('color', $data['color'])
+                ->first();
+            $sku_exists = Shoe::where('sku', $data['sku'])->exists();
+
+            if($duplicate_fields && $sku_exists) {
+                throw new \InvalidArgumentException('Producto ya registrado, requiere actualizacion');
+            }
+
+            if ($duplicate_fields) {
+                throw new \InvalidArgumentException('Datos ya registrados en el SKU: ' . $duplicate_fields->sku);
+            }
+
+            if($sku_exists) {
+                throw new \InvalidArgumentException('SKU ya registrado, revise los datos ingresados');
+            }
+
             $shoe = Shoe::create([
                 'sku' => $data['sku'],
                 'shoe_detail_id' => $shoe_detail->id,
                 'color' => $data['color'],
                 'size' => $data['size'],
                 'stock' => $data['stock'],
+                'is_hidden' => false,
             ]);
 
             $shoe->refresh();
@@ -53,9 +74,8 @@ class ShoeService
 
         return DB::transaction(function() use ($shoe, $data){
             $shoe->update([
-                'color' => $data['color'],
-                'size' => $data['size'],
-                'stock' => $data['stock'],         
+                'stock' => $data['stock'],
+                'is_hidden' => $data['is_hidden'],     
             ]);
 
             $shoe->refresh();

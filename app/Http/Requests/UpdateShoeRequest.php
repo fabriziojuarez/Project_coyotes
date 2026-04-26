@@ -23,10 +23,8 @@ class UpdateShoeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => 'sometimes|string|max:255',
-            'size' => 'sometimes|numeric|min:0',
-            'color' => 'sometimes|string|max:255',
             'stock' => 'sometimes|integer|min:0',
+            'is_hidden' => 'sometimes|boolean',
         ];
     }
 }
