@@ -24,7 +24,6 @@ class UpdateShoeRequest extends FormRequest
     {
         return [
             'stock' => 'sometimes|integer|min:0',
-            'is_hidden' => 'sometimes|boolean',
         ];
     }
 }

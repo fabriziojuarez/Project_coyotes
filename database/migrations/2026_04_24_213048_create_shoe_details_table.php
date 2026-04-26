@@ -26,7 +26,7 @@ return new class extends Migration
             $table->text('description');
             $table->timestamps();
 
-            $table->unique(['category_id', 'brand', 'model']);
+            $table->unique(['brand', 'model']);
         });
     }
 

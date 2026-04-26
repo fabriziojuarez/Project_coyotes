@@ -20,6 +20,15 @@ class ShoeDetailController extends Controller
         ], 200);
     }
 
+    public function show(int $id){
+        $shoe_detail = $this->shoeDetailService->show($id);
+
+        return response()->json([
+            'message' => 'Modelo de zapato encontrado',
+            'data' => $shoe_detail,
+        ], 200);
+    }
+
     public function update(UpdateShoeDetailRequest $request, int $id){
         $shoe_detail = $this->shoeDetailService->update($id, $request->validated());
 

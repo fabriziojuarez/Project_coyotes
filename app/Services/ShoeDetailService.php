@@ -21,14 +21,20 @@ class ShoeDetailService
         return $shoe_details;
     }
 
+    public function show(int $id): ShoeDetail
+    {
+        $shoe_detail = ShoeDetail::with('shoes')->findOrFail($id);
+        return $shoe_detail;
+    }
+
     public function store(array $data): ShoeDetail
     {
         return DB::transaction(function() use ($data){
             $shoe_detail = ShoeDetail::firstOrCreate([
-                'category_id' => $data['category'],
                 'brand' => $data['brand'],
                 'model' => $data['model'],
             ],[
+                'category_id' => $data['category'],
                 'description' => $data['description'] ?? null,
                 'base_price' => $data['base_price'],
                 'is_discontinued' => false,
@@ -46,13 +52,21 @@ class ShoeDetailService
         return DB::transaction(function() use ($shoe_detail, $data){
             $duplicate_fields = ShoeDetail::query()
                 ->where('id', '!=', $shoe_detail->id)
-                ->where('category_id', $data['category'])
                 ->where('brand', $data['brand'])
                 ->where('model', $data['model'])
-                ->exists();
+                ->first();
 
             if ($duplicate_fields) {
-                throw new \InvalidArgumentException('Detalles del calzado ya registrados');
+                if($duplicate_fields->is_discontinued) {
+                    $duplicate_fields->shoes()->update([
+                        'shoe_detail_id' => $shoe_detail->id
+                        ]);
+                    $duplicate_fields->delete();
+                // si los zapatos que tenian los dos comparten la combinacion de talla y color saldra error por la reestriccion
+                //
+                }else{
+                    throw new \InvalidArgumentException('Detalles del calzado ya registrados');
+                }
             }
 
             $shoe_detail->update([

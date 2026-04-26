@@ -29,7 +29,6 @@ class UpdateShoeDetailRequest extends FormRequest
             'base_price' => 'required|numeric|min:0',
             'description' => 'required|nullable|string|max:255',
             'promo_descount' => 'sometimes|nullable|integer|min:0|max:100',
-            'is_discontinued' => 'required|boolean',
         ];
     }
 }

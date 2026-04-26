@@ -35,6 +35,7 @@ class ShoeService
             $shoe_detail_service = new ShoeDetailService();
             $shoe_detail = $shoe_detail_service->store($data);
 
+            // corregir si el sku corresponde a los datos ingresados, ya que pueden mandar los datos y sku cualquiera e igual saltaria el error                    
             $duplicate_fields = Shoe::select('*')
                 ->where('shoe_detail_id', $shoe_detail->id)
                 ->where('size', $data['size'])
@@ -42,8 +43,16 @@ class ShoeService
                 ->first();
             $sku_exists = Shoe::where('sku', $data['sku'])->exists();
 
-            if($duplicate_fields && $sku_exists) {
-                throw new \InvalidArgumentException('Producto ya registrado, requiere actualizacion');
+            if($duplicate_fields && $sku_exists && $duplicate_fields->sku == $data['sku']) {
+                if($duplicate_fields->is_hidden || $duplicate_fields->stock == 0) {
+                    $duplicate_fields->update([
+                        'stock' => $data['stock'],
+                        'is_hidden' => false,
+                    ]);
+                    return $duplicate_fields;
+                }else{
+                    throw new \InvalidArgumentException('Producto ya registrado, requiere actualizacion');
+                }
             }
 
             if ($duplicate_fields) {
@@ -75,7 +84,6 @@ class ShoeService
         return DB::transaction(function() use ($shoe, $data){
             $shoe->update([
                 'stock' => $data['stock'],
-                'is_hidden' => $data['is_hidden'],     
             ]);
 
             $shoe->refresh();
