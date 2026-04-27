@@ -35,14 +35,17 @@ class ShoeDetailService
 
     public function store(array $data): ShoeDetail
     {
+        //si no se envia el base_price y el category_id, y no hay un modelo existente, debe dar una exception
+        // si no se envian esos dos campos pero el modelo existe, no hay problema
+        
         return DB::transaction(function() use ($data){
             $shoe_detail = ShoeDetail::firstOrCreate([
                 'brand' => $data['brand'],
                 'model' => $data['model'],
             ],[
-                'category_id' => $data['category'],
+                'category_id' => $data['category'] ?? throw new \InvalidArgumentException('Category is required'),
                 'description' => $data['description'] ?? null,
-                'base_price' => $data['base_price'],
+                'base_price' => $data['base_price'] ?? throw new \InvalidArgumentException('Base price is required'),
             ]);
 
             $shoe_detail->refresh();
