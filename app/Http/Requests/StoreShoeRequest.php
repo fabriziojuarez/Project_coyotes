@@ -30,7 +30,7 @@ class StoreShoeRequest extends FormRequest
             'base_price' => 'required|numeric|min:0',
             'color' => 'required|string|max:255',
             'size' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:1',
             'description' => 'sometimes|nullable|string|max:255',
         ];
     }
