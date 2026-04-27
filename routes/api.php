@@ -14,6 +14,7 @@ Route::prefix('shoes')->controller(ShoeController::class)->group(function () {
 });
 
 Route::prefix('shoe-details')->controller(ShoeDetailController::class)->group(function () {
+    Route::get('/{id}/shoes', 'getShoes');
     Route::get('/', 'index');
     Route::get('/{id}', 'show');
     Route::put('/{id}', 'update');

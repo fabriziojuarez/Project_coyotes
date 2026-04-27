@@ -27,6 +27,12 @@ class ShoeDetailService
         return $shoe_detail;
     }
 
+    public function getShoes(int $id)
+    {
+        $shoe_detail = ShoeDetail::findOrFail($id);
+        return $shoe_detail->shoes()->where('is_hidden', false)->get();
+    }
+
     public function store(array $data): ShoeDetail
     {
         return DB::transaction(function() use ($data){

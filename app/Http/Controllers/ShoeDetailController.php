@@ -29,6 +29,15 @@ class ShoeDetailController extends Controller
         ], 200);
     }
 
+    public function getShoes(int $id){
+        $shoes = $this->shoeDetailService->getShoes($id);
+
+        return response()->json([
+            'message' => 'Zapatos del modelo encontrados',
+            'data' => $shoes,
+        ], 200);
+    }
+
     public function update(UpdateShoeDetailRequest $request, int $id){
         $shoe_detail = $this->shoeDetailService->update($id, $request->validated());
 
