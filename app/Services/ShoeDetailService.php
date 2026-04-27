@@ -43,7 +43,6 @@ class ShoeDetailService
                 'category_id' => $data['category'],
                 'description' => $data['description'] ?? null,
                 'base_price' => $data['base_price'],
-                'is_discontinued' => false,
             ]);
 
             $shoe_detail->refresh();
